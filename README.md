@@ -2,6 +2,12 @@
 
 Users sign up, create or join organisations, invite teammates with roles, and see **only** their own organisation's data. Includes an admin panel with an audit log.
 
+## Live preview
+
+**https://appstage-249c-3000.prg1.zerops.app**
+
+This is the staging build. It's seeded with two demo orgs, and the login page has one-click demo accounts. The password for all of them is `Demo-Pass-2026!`. Sign in as **Alice**: she owns Acme Rockets and is a member of Globex Studios, so she can use the org switcher (⌘O) to watch every view re-scope. Demo data may be reset at any time.
+
 - **Frontend:** Vue 3 + Vite + TypeScript (`src/client`)
 - **API:** Node 24 + Fastify 5 + TypeScript, run natively with Node's type stripping (`src/server`)
 - **Data:** PostgreSQL (`db`) for all identity and tenant data; Valkey (`cache`) for sessions, email tokens and rate limits
