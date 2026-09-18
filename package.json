@@ -1,0 +1,42 @@
+{
+  "name": "saas-starter",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "node --watch-path=src/server --watch-path=src/shared src/server/index.ts",
+    "build": "vite build",
+    "start": "node src/server/index.ts",
+    "migrate": "node src/server/migrate.ts",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@fastify/cookie": "^11.1.2",
+    "@fastify/helmet": "^13.1.1",
+    "@fastify/middie": "^9.3.4",
+    "@fastify/static": "^10.1.4",
+    "argon2": "^0.45.1",
+    "fastify": "^5.12.5",
+    "ioredis": "^6.0.0",
+    "nodemailer": "^10.0.10",
+    "pg": "^8.23.0",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "^24.13.5",
+    "@types/nodemailer": "^8.0.2",
+    "@types/pg": "^8.23.1",
+    "@vitejs/plugin-vue": "^6.0.9",
+    "pinia": "^4.0.3",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.0",
+    "vitest": "^5.0.1",
+    "vue": "^3.5.43",
+    "vue-router": "^5.3.1"
+  }
+}

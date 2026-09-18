@@ -1,0 +1,62 @@
+zerops:
+  # Dev workspace: source is deployed as-is, the dev server (Fastify + Vite
+  # middleware with HMR) is started by the agent via zerops_dev_server.
+  - setup: appdev
+    build:
+      base: ubuntu/nodejs@24
+      buildCommands:
+        - npm install
+      deployFiles:
+        - .
+      cache:
+        - node_modules
+    run:
+      base: ubuntu/nodejs@24
+      ports:
+        - port: 3000
+          httpSupport: true
+      envVariables:
+        NODE_ENV: development
+        DATABASE_URL: postgresql://${db_user}:${db_password}@${db_hostname}:${db_port}/${db_dbName}
+        DATABASE_ADMIN_URL: postgresql://${db_superUser}:${db_superUserPassword}@${db_hostname}:${db_port}/${db_dbName}
+        REDIS_URL: ${cache_connectionString}
+      start: zsc noop --silent
+
+  # Production build — used by appstage (dev project) and app (prod project).
+  - setup: prod
+    build:
+      base: ubuntu/nodejs@24
+      buildCommands:
+        - npm ci
+        - npm run build
+        - npm prune --omit=dev
+      deployFiles:
+        - dist
+        - src/server
+        - src/shared
+        - node_modules
+        - package.json
+      cache:
+        - node_modules
+    deploy:
+      readinessCheck:
+        httpGet:
+          port: 3000
+          path: /api/health
+    run:
+      base: ubuntu/nodejs@24
+      ports:
+        - port: 3000
+          httpSupport: true
+      envVariables:
+        NODE_ENV: production
+        DATABASE_URL: postgresql://${db_user}:${db_password}@${db_hostname}:${db_port}/${db_dbName}
+        DATABASE_ADMIN_URL: postgresql://${db_superUser}:${db_superUserPassword}@${db_hostname}:${db_port}/${db_dbName}
+        REDIS_URL: ${cache_connectionString}
+      initCommands:
+        - zsc execOnce ${appVersionId} -- node src/server/migrate.ts
+      start: node src/server/index.ts
+      healthCheck:
+        httpGet:
+          port: 3000
+          path: /api/health
