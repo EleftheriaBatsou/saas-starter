@@ -41,7 +41,8 @@ async function request<T>(method: string, path: string, body?: unknown): Promise
   const data = res.status === 204 ? {} : await res.json().catch(() => ({}));
   if (!res.ok) {
     const err = new ApiError(res.status, data);
-    if (res.status === 401 && !path.startsWith('/api/auth/')) onAuthLost(err);
+    // /api/me is the "am I signed in?" probe — a 401 there is an answer, not a lost session.
+    if (res.status === 401 && !path.startsWith('/api/auth/') && path !== '/api/me') onAuthLost(err);
     if (err.code === 'ORG_MISMATCH' || err.code === 'NOT_A_MEMBER' || err.code === 'NO_ACTIVE_ORG') onOrgChanged(err);
     throw err;
   }

@@ -13,8 +13,8 @@ app.use(router);
 
 const session = useSession();
 onApiEvents({
-  authLost: async () => {
-    await session.refresh();
+  authLost: () => {
+    session.clear();
     if (!router.currentRoute.value.meta.public) router.push({ path: '/login', query: { expired: '1' } });
   },
   orgChanged: async (err) => {

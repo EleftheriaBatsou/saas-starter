@@ -48,11 +48,16 @@ export const useSession = defineStore('session', () => {
     await refresh();
   }
 
+  function clear() {
+    me.value = null;
+    setApiOrg(null);
+  }
+
   async function logout() {
     await api.post('/api/auth/logout').catch(() => {});
     me.value = null;
     setApiOrg(null);
   }
 
-  return { me, loaded, orgEpoch, user, orgs, activeOrg, role, can, refresh, switchOrg, logout };
+  return { me, loaded, orgEpoch, user, orgs, activeOrg, role, can, refresh, switchOrg, logout, clear };
 });
